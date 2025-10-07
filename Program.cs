@@ -1,4 +1,6 @@
-﻿Console.Clear();
+﻿using System.Net.NetworkInformation;
+
+Console.Clear();
 
 Console.WriteLine(@"This is Mad Libs. When you are dong providing the requested words
 I will build them into a funny story for you
@@ -16,18 +18,28 @@ for (int item = 0; item < splitStory.Length; item++)
     string word = "";
     if (splitStory[item].Contains('('))
     {
-        //splitStory[item].Remove(')');
         while (!splitStory[item].Contains(')'))
         {
             word += splitStory[item] + " ";
-            //splitStory[item].Remove(')');
             item++;
         }
         word += splitStory[item];
 
-        Console.WriteLine(word);
+        string prefix;
+        bool end_sentence = false;
+        if (word.Contains('.')) end_sentence = true;
+        word = word.Replace("(", "").Replace(")", "").Replace(".", "");
+        if (word.StartsWith('a') || word.StartsWith('e') || word.StartsWith('i') || word.StartsWith('o') || word.StartsWith('u')) prefix = "an";
+        else prefix = "a";
+        Console.Write($"Please choose {prefix} {word}: ");
+        word = Console.ReadLine();
+        if (end_sentence) word += '.';
     }
     else word = splitStory[item];
     story.Add(word);
 }
-foreach (string item in story) Console.WriteLine(item);
+
+foreach (string item in story)
+{
+    Console.Write(item + " ");
+}
